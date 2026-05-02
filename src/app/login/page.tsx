@@ -21,6 +21,11 @@ export default function LoginPage() {
   )
   const [isGooglePending, startGoogleTransition] = useTransition()
 
+  require('react').useEffect(() => {
+    console.log('CLIENT DEBUG - URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'PRESENT' : 'MISSING')
+    console.log('CLIENT DEBUG - KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'PRESENT' : 'MISSING')
+  }, [])
+
   const errors = state?.error as FieldErrors | undefined
 
   return (

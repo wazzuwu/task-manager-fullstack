@@ -6,6 +6,9 @@ import { formatDistanceToNow } from 'date-fns'
 import { RecentActivityList } from '@/components/dashboard/RecentActivityList'
 
 export default async function DashboardPage() {
+  console.log('DEBUG - URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'PRESENT' : 'MISSING')
+  console.log('DEBUG - KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'PRESENT' : 'MISSING')
+
   const projects = await getProjectsAction() || []
   const supabase = await createClient()
   
