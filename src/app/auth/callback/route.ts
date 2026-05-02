@@ -7,9 +7,14 @@ import { createClient } from '@/lib/supabase/server'
  * We exchange the code for a session and redirect to the dashboard.
  */
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url)
+  const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')
   const next = searchParams.get('next') ?? '/dashboard'
+
+  // Determine the correct origin from forwarded headers if available
+  const host = request.headers.get('x-forwarded-host') || request.headers.get('host')
+  const protocol = request.headers.get('x-forwarded-proto') || (host?.includes('localhost') ? 'http' : 'https')
+  const origin = `${protocol}://${host}`
 
   if (code) {
     const supabase = await createClient()

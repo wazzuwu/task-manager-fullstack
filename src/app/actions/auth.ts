@@ -77,9 +77,19 @@ export async function signOutAction() {
 export async function signInWithGoogleAction() {
   const supabase = await createClient()
   const headersList = await headers()
-  const host = headersList.get('host')
-  const protocol = headersList.get('x-forwarded-proto') || (host?.includes('localhost') ? 'http' : 'https')
-  const origin = headersList.get('origin') || `${protocol}://${host}`
+  const referer = headersList.get('referer')
+  let origin = process.env.NEXT_PUBLIC_SITE_URL
+
+  // If NEXT_PUBLIC_SITE_URL is missing or set to localhost, try to use referer
+  if ((!origin || origin.includes('localhost')) && referer) {
+    origin = new URL(referer).origin
+  }
+
+  if (!origin) {
+    const host = headersList.get('x-forwarded-host') || headersList.get('host')
+    const protocol = headersList.get('x-forwarded-proto') || (host?.includes('localhost') ? 'http' : 'https')
+    origin = `${protocol}://${host}`
+  }
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
