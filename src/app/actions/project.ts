@@ -23,6 +23,17 @@ export async function createProjectAction(prevState: any, formData: FormData) {
     return { error: { _form: ['Unauthorized'] } }
   }
 
+  // Check if user is admin
+  const { data: userData } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (userData?.role !== 'admin') {
+    return { error: { _form: ['Only admins can create projects.'] } }
+  }
+
   const { data, error } = await supabase
     .from('projects')
     .insert({

@@ -1,6 +1,7 @@
 'use server'
 
 import { redirect } from 'next/navigation'
+import { headers } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import { SignUpSchema, LoginSchema } from '@/lib/validations/auth.schema'
 
@@ -38,6 +39,9 @@ export async function signUpAction(prevState: any, formData: FormData) {
 
 // ─── Login ───────────────────────────────────────────────────────────────────
 export async function loginAction(prevState: any, formData: FormData) {
+  console.log('SERVER ACTION DEBUG - URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'PRESENT' : 'MISSING')
+  console.log('SERVER ACTION DEBUG - KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'PRESENT' : 'MISSING')
+
   const raw = {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
@@ -72,11 +76,15 @@ export async function signOutAction() {
 // ─── Google OAuth ─────────────────────────────────────────────────────────────
 export async function signInWithGoogleAction() {
   const supabase = await createClient()
+  const headersList = await headers()
+  const host = headersList.get('host')
+  const protocol = headersList.get('x-forwarded-proto') || (host?.includes('localhost') ? 'http' : 'https')
+  const origin = headersList.get('origin') || `${protocol}://${host}`
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'}/auth/callback`,
+      redirectTo: `${origin}/auth/callback`,
     },
   })
 

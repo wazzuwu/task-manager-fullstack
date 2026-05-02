@@ -1,10 +1,21 @@
 import { getProjectsAction } from '@/app/actions/project'
+import { createClient } from '@/lib/supabase/server'
 import { FolderKanban, Plus, MoreVertical, Users } from 'lucide-react'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
 
 export default async function ProjectsPage() {
   const projects = await getProjectsAction() || []
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  const { data: userData } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user?.id)
+    .single()
+    
+  const isAdmin = userData?.role === 'admin'
   
   return (
     <div className="max-w-6xl mx-auto space-y-8">
@@ -14,13 +25,15 @@ export default async function ProjectsPage() {
           <p className="text-white/50 mt-1">Manage all your team's projects.</p>
         </div>
         
-        <Link 
-          href="/projects/new" 
-          className="flex items-center gap-2 px-5 py-2.5 bg-brand-500 hover:bg-brand-400 text-white rounded-xl text-sm font-medium transition-colors shadow-lg shadow-brand-500/25"
-        >
-          <Plus className="w-5 h-5" />
-          New Project
-        </Link>
+        {isAdmin && (
+          <Link 
+            href="/projects/new" 
+            className="flex items-center gap-2 px-5 py-2.5 bg-brand-500 hover:bg-brand-400 text-white rounded-xl text-sm font-medium transition-colors shadow-lg shadow-brand-500/25"
+          >
+            <Plus className="w-5 h-5" />
+            New Project
+          </Link>
+        )}
       </div>
 
       {projects.length === 0 ? (
@@ -28,15 +41,23 @@ export default async function ProjectsPage() {
           <div className="w-20 h-20 rounded-3xl bg-white/5 flex items-center justify-center mx-auto mb-6">
             <FolderKanban className="w-10 h-10 text-white/30" />
           </div>
-          <h3 className="text-xl font-bold text-white mb-3">No projects found</h3>
-          <p className="text-white/50 mb-8 max-w-md mx-auto text-lg">You don't have any projects yet. Create one to get started.</p>
-          <Link 
-            href="/projects/new"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white/10 hover:bg-white/15 text-white font-medium transition-colors"
-          >
-            <Plus className="w-5 h-5" />
-            Create your first project
-          </Link>
+          <h3 className="text-xl font-bold text-white mb-3">
+            {isAdmin ? 'No projects found' : 'No project assigned'}
+          </h3>
+          <p className="text-white/50 mb-8 max-w-md mx-auto text-lg">
+            {isAdmin 
+              ? "You don't have any projects yet. Create one to get started." 
+              : "You haven't been assigned to any projects yet. Please contact your administrator."}
+          </p>
+          {isAdmin && (
+            <Link 
+              href="/projects/new"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white/10 hover:bg-white/15 text-white font-medium transition-colors"
+            >
+              <Plus className="w-5 h-5" />
+              Create your first project
+            </Link>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
