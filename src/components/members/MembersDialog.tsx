@@ -104,8 +104,8 @@ export function MembersDialog({ projectId, members, currentUserRole, currentUser
                   {isInviting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Invite'}
                 </button>
               </form>
-              {inviteState?.error?._form && (
-                <p className="text-xs text-red-400 mt-2 ml-1">{inviteState.error._form[0]}</p>
+              {(inviteState?.error as any)?._form && (
+                <p className="text-xs text-red-400 mt-2 ml-1">{(inviteState?.error as any)._form[0]}</p>
               )}
               {inviteState?.success && (
                 <p className="text-xs text-success mt-2 ml-1">Member invited successfully!</p>

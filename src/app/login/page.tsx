@@ -48,7 +48,7 @@ export default function LoginPage() {
           <button
             id="google-login-btn"
             type="button"
-            onClick={() => startGoogleTransition(() => signInWithGoogleAction())}
+            onClick={() => startGoogleTransition(async () => { await signInWithGoogleAction(); })}
             disabled={isGooglePending || isPending}
             className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-all duration-200 text-sm font-medium text-slate-700 mb-6 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
           >

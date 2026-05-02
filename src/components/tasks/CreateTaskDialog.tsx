@@ -47,9 +47,9 @@ export function CreateTaskDialog({ projectId }: { projectId: string }) {
           </Dialog.Description>
 
           <form action={formAction} className="space-y-4">
-            {state?.error?._form && (
+            {(state?.error as any)?._form && (
               <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-600">
-                {state.error._form[0]}
+                {(state?.error as any)._form[0]}
               </div>
             )}
 
@@ -64,7 +64,7 @@ export function CreateTaskDialog({ projectId }: { projectId: string }) {
                 placeholder="What needs to be done?"
                 className={inputCls}
               />
-              {state?.error?.title && <p className="text-xs text-red-500">{state.error.title[0]}</p>}
+              {(state?.error as any)?.title && <p className="text-xs text-red-500">{(state?.error as any).title[0]}</p>}
             </div>
 
             <div className="space-y-1.5">
