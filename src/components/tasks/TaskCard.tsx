@@ -68,7 +68,7 @@ export function TaskCard({ task, projectId, isAdmin }: TaskCardProps) {
       className={`glass p-4 rounded-xl hover:bg-white/5 transition-colors group cursor-default shadow-sm border border-white/5 relative ${isDeleting ? 'opacity-50 pointer-events-none' : ''}`}
     >
       {/* Action buttons — show on hover */}
-      <div className="absolute top-3 right-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="absolute top-3 right-3 flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
         <EditTaskDialog task={task} projectId={projectId} />
         {isAdmin && (
           <button
@@ -86,7 +86,7 @@ export function TaskCard({ task, projectId, isAdmin }: TaskCardProps) {
         <button
           {...attributes}
           {...listeners}
-          className="mt-1 text-white/20 hover:text-white/60 cursor-grab active:cursor-grabbing transition-colors"
+          className="mt-1 text-white/40 md:text-white/20 hover:text-white/60 cursor-grab active:cursor-grabbing transition-colors"
         >
           <GripVertical className="w-4 h-4" />
         </button>
