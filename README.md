@@ -1,6 +1,6 @@
 # TaskFlow — Modern Team Task Manager
 
-TaskFlow is a premium, full-stack task management application designed for seamless team collaboration. Built with **Next.js 15**, **Tailwind CSS 4**, and **Supabase**, it features real-time updates, drag-and-drop Kanban boards, and a fully responsive design.
+TaskFlow is a premium, full-stack task management application designed for seamless team collaboration. Built with **Next.js 16**, **Tailwind CSS 4**, and **Supabase**, it features real-time updates, drag-and-drop Kanban boards, and a fully responsive design.
 
 ![TaskFlow Logo](public/logo.png)
 
@@ -17,65 +17,69 @@ TaskFlow is a premium, full-stack task management application designed for seaml
 
 ## 🛠 Tech Stack
 
-- **Framework**: [Next.js 15+](https://nextjs.org/) (App Router, Server Actions)
+- **Framework**: [Next.js 16+](https://nextjs.org/) (App Router, Server Actions)
 - **Styling**: [Tailwind CSS 4](https://tailwindcss.com/) (Modern CSS-first approach)
-- **Database & Auth**: [Supabase](https://supabase.com/) (PostgreSQL, Auth, Realtime)
+- **Database & Auth**: [Supabase](https://supabase.com/) (Postgres, SSR, Realtime)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Drag & Drop**: [@dnd-kit](https://dndkit.com/)
 - **Forms**: React Hook Form + Zod
 - **State Management**: Zustand & React Query
 
-## 📊 Database Schema
+## 📊 Database Schema (In-Depth)
 
-The project uses a relational PostgreSQL schema with Row Level Security (RLS) to ensure data integrity and privacy.
+The project uses a highly relational PostgreSQL schema optimized for speed and data integrity, protected by Supabase Row Level Security (RLS).
 
-- **`users`**: Stores user profiles, synced automatically from Supabase Auth.
-- **`projects`**: Core workspaces with names, descriptions, and owners.
-- **`project_members`**: Join table managing project access and roles (`admin`, `member`).
-- **`tasks`**: Task items including status (`todo`, `in_progress`, `done`), priority (`low`, `medium`, `high`), and assignees.
-- **`task_activity_logs`**: Tracks every action performed on a task for audit purposes.
-- **`notifications`**: User-specific alerts for project and task activities.
+- **`users`**: Stores user profiles. Linked to Supabase Auth. Automatically synced via triggers on signup.
+- **`projects`**: Core workspaces. RLS ensures only project members can view their projects.
+- **`project_members`**: Junction table for user-project relationships. Roles include `admin` (can manage settings/members) and `member` (standard access).
+- **`tasks`**: Task items with `todo`, `in_progress`, and `done` statuses. Priority levels (`low`, `medium`, `high`) are enforced via enums.
+- **`task_activity_logs`**: Immutable audit trail using JSONB to track changes to task fields.
+- **`notifications`**: Real-time alerts for user assignments and status updates.
+- **`system_admin_roles`**: Global administrative access for platform management.
 
-## 🚂 Deployment on Railway
+## 💻 Local Setup Guide
 
-1. **Push to GitHub**: Push your repository to GitHub.
-2. **Create Railway Project**: Connect your GitHub repo to a new Railway project.
-3. **Environment Variables**: Add the following variables in the Railway dashboard:
-   - `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase Project URL.
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase Anon Key.
-   - `NEXT_PUBLIC_SITE_URL`: Your Railway production URL (e.g., `https://your-app.up.railway.app`).
-4. **Supabase Configuration**:
-   - Add your Railway URL to the **Redirect URLs** in Supabase Auth settings.
-   - Ensure your database migrations are applied to the production instance.
+Follow these steps to run TaskFlow on your local machine:
 
-## 💻 Local Setup
+### 1. Prerequisites
+- **Node.js**: v18.0.0 or higher.
+- **Supabase Account**: A project on [Supabase.com](https://supabase.com/).
 
-1. **Clone the repo**:
-   ```bash
-   git clone https://github.com/yourusername/task-manager-fullstack.git
-   cd task-manager-fullstack
-   ```
+### 2. Installation
+```bash
+git clone https://github.com/yourusername/task-manager-fullstack.git
+cd task-manager-fullstack
+npm install
+```
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+### 3. Database Initialization
+1. Create a new project in the **Supabase Dashboard**.
+2. Navigate to the **SQL Editor**.
+3. Copy and run the scripts from the `supabase/migrations/` folder in sequential order (001 to 010). This will set up the tables, triggers, and RLS policies.
 
-3. **Environment Variables**:
-   Create a `.env.local` file with:
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-   NEXT_PUBLIC_SITE_URL=http://localhost:3000
-   ```
+### 4. Configuration
+Create a `.env.local` file in the root directory:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
 
-4. **Run development server**:
-   ```bash
-   npm run dev
-   ```
+### 5. Running the App
+```bash
+npm run dev
+```
+Access the application at [http://localhost:3000](http://localhost:3000).
 
-## 🛡 Security (User Access)
+## 🚂 Deployment (Railway)
 
-- **RLS Policies**: Users can only see projects they are members of.
-- **Admin Rights**: Only Project Admins can delete projects or manage team members.
-- **Data Protection**: All API interactions happen via Secure Server Actions or authenticated Supabase clients.
+1. **Push to GitHub**: Push your repository to a GitHub account.
+2. **Railway Project**: Connect your GitHub repo to a new Railway project.
+3. **Environment Variables**: Add `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and `NEXT_PUBLIC_SITE_URL` in the Railway dashboard.
+4. **Supabase Redirects**: Add your production Railway URL to the **Redirect URLs** in **Supabase Auth -> Settings**.
+
+## 🛡 Security & Access Control
+
+- **RLS Policies**: Data is protected at the database level. Users can never fetch data for projects they aren't part of.
+- **Server Actions**: All mutations happen via secure Next.js Server Actions with server-side validation.
+- **Admin Privileges**: Sensitive operations like member removal or project deletion are restricted to `admin` roles.

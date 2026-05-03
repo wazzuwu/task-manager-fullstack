@@ -33,15 +33,6 @@ CORE FEATURES
    - Automatic logging of every task change.
    - Activity feed showing who changed what and when.
 
-DATABASE SCHEMA (POSTGRESQL)
-----------------------------
-- Table: users (Auth link, name, avatar, role)
-- Table: projects (Name, description, owner)
-- Table: project_members (Project ID, User ID, Role)
-- Table: tasks (Title, status, priority, assignee, due date)
-- Table: task_activity_logs (Action, old/new values, timestamp)
-- Table: notifications (User alerts, status)
-
 TECHNICAL STACK
 ---------------
 - Frontend: React 19, Next.js 16 (App Router)
@@ -49,6 +40,80 @@ TECHNICAL STACK
 - Backend: Supabase (Postgres, SSR, Realtime)
 - Components: Radix UI, Lucide React
 - Logic: Zod, React Hook Form, TanStack Query
+
+LOCAL DEVELOPMENT SETUP
+-----------------------
+Follow these steps to get the project running on your local system:
+
+1. PREREQUISITES:
+   - Node.js (v18.0.0 or higher)
+   - npm or yarn
+   - A Supabase account (Free tier works perfectly)
+
+2. CLONE & INSTALL:
+   ```bash
+   git clone https://github.com/yourusername/task-manager-fullstack.git
+   cd task-manager-fullstack
+   npm install
+   ```
+
+3. SUPABASE SETUP:
+   - Create a new project in the Supabase Dashboard.
+   - Go to the **SQL Editor** and run the scripts found in `supabase/migrations/` in order (001 to 010).
+   - Go to **Project Settings -> API** to get your URL and Anon Key.
+   - Go to **Authentication -> Providers** and enable Google if you want OAuth support.
+
+4. ENVIRONMENT VARIABLES:
+   Create a `.env.local` file in the root directory:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_project_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+   NEXT_PUBLIC_SITE_URL=http://localhost:3000
+   ```
+
+5. RUN LOCALLY:
+   ```bash
+   npm run dev
+   ```
+   Open `http://localhost:3000` in your browser.
+
+IN-DEPTH DATABASE SCHEMA (POSTGRESQL)
+--------------------------------------
+TaskFlow uses a highly relational schema optimized for speed and data integrity, protected by Supabase Row Level Security (RLS).
+
+1. public.users
+   - Primary key linked to `auth.users` via UUID.
+   - Automatically synced via database triggers on signup.
+   - Stores metadata like `full_name` and `avatar_url`.
+
+2. public.projects
+   - The core workspace entity.
+   - Each project has an `owner_id` (the creator).
+   - RLS Policy: Only visible to project members.
+
+3. public.project_members
+   - Junction table for the many-to-many relationship between Users and Projects.
+   - Roles: `admin` (can manage settings/members) or `member` (can manage tasks).
+   - Enforces unique membership per project/user pair.
+
+4. public.tasks
+   - Belongs to a `project_id`.
+   - Fields: `status` (Enum: todo, in_progress, done), `priority` (Enum: low, medium, high), `assignee_id`.
+   - RLS Policy: Members can view/insert; only Admins or the Assignee can update.
+
+5. public.task_activity_logs
+   - Immutable audit trail.
+   - Uses JSONB fields (`old_value`, `new_value`) to track delta changes.
+   - Automatically populated via application logic or database triggers.
+
+6. public.notifications & complaints
+   - `notifications`: User-specific alerts for assignments and status changes.
+   - `complaints`: System for reporting issues within a project.
+
+7. Database Triggers & Functions
+   - `handle_new_user()`: Syncs auth profiles.
+   - `handle_new_project()`: Automatically makes the creator an 'admin'.
+   - `update_updated_at()`: Standard timestamp management.
 
 DEPLOYMENT GUIDE (RAILWAY)
 --------------------------
@@ -66,4 +131,4 @@ USER ACCESS CONTROL
 - Authenticated Users: Dashboard, Projects, Settings.
 - Project Members: View and update tasks within their projects.
 - Project Admins: Full management of project settings and members.
-- System Admins: Global user and project management access.
+- System Admins: Global user and project management access (Role defined in migration 008).
