@@ -33,7 +33,7 @@ export function Sidebar({ isAdmin, user, onClose, className }: SidebarProps) {
       {/* Logo & Close button (mobile) */}
       <div className="py-6 flex items-center justify-between px-4 border-b border-slate-100">
         <div className="flex items-center justify-center flex-1">
-          <div className="relative h-10 w-40">
+          <div className="relative h-12 w-full max-w-[160px]">
             <Image src="/logo.png" alt="Logo" fill className="object-contain" priority />
           </div>
         </div>

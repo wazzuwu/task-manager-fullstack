@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Menu, X } from 'lucide-react'
+import Image from 'next/image'
 import { Sidebar } from './Sidebar'
 import { NotificationDropdown } from '@/components/notifications/NotificationDropdown'
 import { SettingsDropdown } from '@/components/settings/SettingsDropdown'
@@ -79,9 +80,9 @@ export function AppShell({ children, isAdmin, user }: AppShellProps) {
               <Menu className="w-5 h-5" />
             </button>
             <div className="lg:hidden h-8 w-px bg-slate-200 mx-1" />
-            <h1 className="text-lg font-bold bg-gradient-to-r from-brand-600 to-accent-500 bg-clip-text text-transparent lg:hidden">
-              TaskFlow
-            </h1>
+            <div className="relative h-12 w-full max-w-[160px]">
+              <Image src="/logo.png" alt="Logo" fill className="object-contain" priority />
+            </div>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4">
