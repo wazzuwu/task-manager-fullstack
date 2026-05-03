@@ -46,8 +46,9 @@ export function UserManagementTable({ initialUsers }: { initialUsers: User[] }) 
         />
       </div>
 
-      <div className="glass rounded-2xl overflow-hidden">
-        <table className="w-full text-left text-sm">
+      <div className="glass rounded-2xl overflow-hidden overflow-x-auto">
+        <table className="w-full text-left text-sm min-w-[600px] md:min-w-0">
+
           <thead className="bg-white/5 text-white/50 font-medium border-b border-white/5">
             <tr>
               <th className="px-6 py-4">User</th>

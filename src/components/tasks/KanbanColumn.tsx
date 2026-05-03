@@ -22,7 +22,8 @@ export function KanbanColumn({ id, title, tasks, projectId, isAdmin }: KanbanCol
   })
 
   return (
-    <div className="flex flex-col h-full bg-surface-1/50 rounded-2xl border border-white/5 overflow-hidden">
+    <div className="flex flex-col h-full bg-surface-1/50 rounded-2xl border border-white/5 overflow-hidden w-full md:w-80 lg:w-96 shrink-0">
+
       <div className="p-4 border-b border-white/5 flex items-center justify-between bg-surface-2/50">
         <h3 className="font-semibold text-white">{title}</h3>
         <span className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-xs font-medium text-white/50">

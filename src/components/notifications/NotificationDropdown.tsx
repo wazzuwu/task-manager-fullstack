@@ -53,7 +53,7 @@ export function NotificationDropdown() {
         <Popover.Content 
           align="end" 
           sideOffset={8}
-          className="z-50 w-80 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2"
+          className="z-50 w-[calc(100vw-2rem)] sm:w-80 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2"
         >
           <div className="p-3 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
             <h3 className="font-bold text-slate-900 text-sm">Notifications</h3>

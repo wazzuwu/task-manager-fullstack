@@ -139,7 +139,9 @@ export function KanbanBoard({ projectId, initialTasks, isAdmin }: KanbanBoardPro
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
     >
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[calc(100vh-16rem)]">
+      <div className="flex flex-col md:flex-row gap-6 min-h-0 h-full overflow-x-auto pb-4 custom-scrollbar">
+        <div className="flex flex-col md:flex-row gap-6 min-w-full md:min-w-0 flex-1">
+
         {COLUMNS.map((col) => (
           <KanbanColumn
             key={col.id}
@@ -150,6 +152,7 @@ export function KanbanBoard({ projectId, initialTasks, isAdmin }: KanbanBoardPro
             isAdmin={isAdmin}
           />
         ))}
+        </div>
       </div>
 
       <DragOverlay>

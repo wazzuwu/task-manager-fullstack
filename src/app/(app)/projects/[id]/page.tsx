@@ -35,21 +35,21 @@ export default async function ProjectDetailsPage({ params }: { params: Promise<{
 
   return (
     <div className="max-w-7xl mx-auto space-y-6 h-full flex flex-col">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
           <Link 
             href="/projects"
-            className="w-10 h-10 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors shrink-0"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           </Link>
-          <div>
-            <h1 className="text-3xl font-bold text-white tracking-tight">{project.name}</h1>
-            <p className="text-white/50 text-sm mt-1">{project.description || 'No description'}</p>
+          <div className="min-w-0">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight truncate">{project.name}</h1>
+            <p className="text-white/50 text-xs sm:text-sm mt-0.5 sm:mt-1 truncate">{project.description || 'No description'}</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
           <CreateTaskDialog projectId={project.id} />
 
           <MembersDialog 

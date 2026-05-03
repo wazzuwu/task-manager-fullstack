@@ -50,7 +50,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="glass p-6 rounded-2xl">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-brand-500/20 flex items-center justify-center">
@@ -126,7 +126,7 @@ export default async function DashboardPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.slice(0, 3).map((project) => (
               <Link key={project.id} href={`/projects/${project.id}`}>
                 <div className="glass p-6 rounded-2xl hover:bg-white/5 transition-all cursor-pointer group">
